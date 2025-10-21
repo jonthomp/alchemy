@@ -1,3 +1,20 @@
+## v0.76.0
+
+### &nbsp;&nbsp;&nbsp;🐞 Bug Fixes
+
+- Improve workspace root detection &nbsp;-&nbsp; by **John Royal** in https://github.com/alchemy-run/alchemy/issues/1156 [<samp>(0e1a2)</samp>](https://github.com/alchemy-run/alchemy/commit/0e1a2b8c)
+- **CLI**:
+  - Make god token warning less aggressive &nbsp;-&nbsp; by **Michael K** in https://github.com/alchemy-run/alchemy/issues/1145 [<samp>(24321)</samp>](https://github.com/alchemy-run/alchemy/commit/2432155c)
+- **cli**:
+  - Add message telling user where to get global api key &nbsp;-&nbsp; by **Michael K** in https://github.com/alchemy-run/alchemy/issues/1153 [<samp>(edf6e)</samp>](https://github.com/alchemy-run/alchemy/commit/edf6e356)
+- **cloudflare**:
+  - Lowercase auto-generated worker name &nbsp;-&nbsp; by **John Royal** in https://github.com/alchemy-run/alchemy/issues/1158 [<samp>(e12cf)</samp>](https://github.com/alchemy-run/alchemy/commit/e12cf144)
+  - Avoid fetching settings when inferring zone id &nbsp;-&nbsp; by **John Royal** in https://github.com/alchemy-run/alchemy/issues/1159 [<samp>(2d79a)</samp>](https://github.com/alchemy-run/alchemy/commit/2d79afe0)
+
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/alchemy-run/alchemy/compare/v0.75.1...v0.76.0)
+
+---
+
 ## v0.75.1
 
 ### &nbsp;&nbsp;&nbsp;🐞 Bug Fixes
