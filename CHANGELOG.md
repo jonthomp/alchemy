@@ -1,3 +1,15 @@
+## v0.76.1
+
+### &nbsp;&nbsp;&nbsp;🐞 Bug Fixes
+
+- **cloudflare**:
+  - Add vectorize:index to default scopes &nbsp;-&nbsp; by **Sam Goodwin** in https://github.com/alchemy-run/alchemy/issues/1164 [<samp>(21ce5)</samp>](https://github.com/alchemy-run/alchemy/commit/21ce5313)
+  - Convert maxWaitTimeMs to seconds in miniflare &nbsp;-&nbsp; by **Sam Goodwin** in https://github.com/alchemy-run/alchemy/issues/1165 [<samp>(bc423)</samp>](https://github.com/alchemy-run/alchemy/commit/bc423684)
+
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/alchemy-run/alchemy/compare/v0.76.0...v0.76.1)
+
+---
+
 ## v0.76.0
 
 ### &nbsp;&nbsp;&nbsp;🐞 Bug Fixes
