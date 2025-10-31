@@ -1,3 +1,36 @@
+## v0.77.0
+
+### &nbsp;&nbsp;&nbsp;🚀 Features
+
+- **cloudflare**:
+  - Make container bindings work and use official wrangler json spec &nbsp;-&nbsp; by **Rahul Mishra** and **John Royal** in https://github.com/alchemy-run/alchemy/issues/1173 [<samp>(72893)</samp>](https://github.com/alchemy-run/alchemy/commit/72893923)
+  - Support cloudflare access for remote bindings &nbsp;-&nbsp; by **John Royal** in https://github.com/alchemy-run/alchemy/issues/1171 [<samp>(e3410)</samp>](https://github.com/alchemy-run/alchemy/commit/e3410f67)
+  - R2 bucket custom domain &nbsp;-&nbsp; by **John Royal** in https://github.com/alchemy-run/alchemy/issues/1181 [<samp>(2c24c)</samp>](https://github.com/alchemy-run/alchemy/commit/2c24c26f)
+- **core**:
+  - Improve secret encryption &nbsp;-&nbsp; by **John Royal** in https://github.com/alchemy-run/alchemy/issues/1063 [<samp>(c8e54)</samp>](https://github.com/alchemy-run/alchemy/commit/c8e5487a)
+
+### &nbsp;&nbsp;&nbsp;🐞 Bug Fixes
+
+- **aws**:
+  - Export all aws resources and add aws/ec2 &nbsp;-&nbsp; by **Sam Goodwin** in https://github.com/alchemy-run/alchemy/issues/1182 [<samp>(ff3a7)</samp>](https://github.com/alchemy-run/alchemy/commit/ff3a740d)
+- **cli**:
+  - Use default env file if not specified &nbsp;-&nbsp; by **John Royal** in https://github.com/alchemy-run/alchemy/issues/1180 [<samp>(efe1b)</samp>](https://github.com/alchemy-run/alchemy/commit/efe1b696)
+- **cloudflare**:
+  - Upgrade unenv &nbsp;-&nbsp; by **Sam Goodwin** in https://github.com/alchemy-run/alchemy/issues/1161 [<samp>(46404)</samp>](https://github.com/alchemy-run/alchemy/commit/46404200)
+  - Prevent esbuild errors from crashing reload &nbsp;-&nbsp; by **Michael K** in https://github.com/alchemy-run/alchemy/issues/1170 [<samp>(4f350)</samp>](https://github.com/alchemy-run/alchemy/commit/4f350a40)
+  - Remove excess error log when getting worker subdomain &nbsp;-&nbsp; by **Michael K** in https://github.com/alchemy-run/alchemy/issues/1184 [<samp>(3a31c)</samp>](https://github.com/alchemy-run/alchemy/commit/3a31ce32)
+  - Worker sourcemaps are now correctly formatted &nbsp;-&nbsp; by **Michael K** in https://github.com/alchemy-run/alchemy/issues/1185 [<samp>(9eaaa)</samp>](https://github.com/alchemy-run/alchemy/commit/9eaaa9f5)
+  - Environment undefined when using react router with rolldown-vite &nbsp;-&nbsp; by **John Royal** in https://github.com/alchemy-run/alchemy/issues/1172 [<samp>(33756)</samp>](https://github.com/alchemy-run/alchemy/commit/33756b60)
+  - While adopting non alchemy worker check if old binding is a container &nbsp;-&nbsp; by **Rahul Mishra** and **John Royal** in https://github.com/alchemy-run/alchemy/issues/1189 [<samp>(20379)</samp>](https://github.com/alchemy-run/alchemy/commit/20379730)
+- **planetscale**:
+  - Add default successor to postgres roles &nbsp;-&nbsp; by **Michael K** in https://github.com/alchemy-run/alchemy/issues/1190 [<samp>(f8fd0)</samp>](https://github.com/alchemy-run/alchemy/commit/f8fd09fe)
+- **telemetry**:
+  - Telemetry will timeout if unable to send in 1 second &nbsp;-&nbsp; by **Michael K** in https://github.com/alchemy-run/alchemy/issues/1186 [<samp>(f5395)</samp>](https://github.com/alchemy-run/alchemy/commit/f5395277)
+
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/alchemy-run/alchemy/compare/v0.76.1...v0.77.0)
+
+---
+
 ## v0.76.1
 
 ### &nbsp;&nbsp;&nbsp;🐞 Bug Fixes
