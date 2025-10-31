@@ -312,7 +312,10 @@ export async function prepareWorkerMetadata(
         // let's now apply a herusitic based on binding name (assume binding name is consistent)
         // TODO(sam): this has a chance of being wrong, is that OK? Users should be encouraged to upgrade alchemy version and re-deploy
         const object = props.bindings?.[oldBinding.name];
-        if (object && isDurableObjectNamespace(object)) {
+        if (
+          object &&
+          (isDurableObjectNamespace(object) || isContainer(object))
+        ) {
           if (object.className === oldBinding.class_name) {
             // this is relatively safe to assume is the right match, do not delete
             return [];
@@ -683,10 +686,11 @@ export async function prepareWorkerMetadata(
 
 export function bumpMigrationTagVersion(tag?: string) {
   if (tag) {
-    if (!tag.match(/^v\d+$/)) {
-      throw new Error(`Invalid tag format: ${tag}. Expected format: v<number>`);
+    const version = tag.match(/^(alchemy:)?v(\d+)$/)?.[2];
+    if (!version) {
+      return "alchemy:v1";
     }
-    return `v${Number.parseInt(tag.slice(1), 10) + 1}`;
+    return `alchemy:v${Number.parseInt(version, 10) + 1}`;
   }
   return undefined;
 }
