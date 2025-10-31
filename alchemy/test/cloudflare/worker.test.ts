@@ -998,9 +998,12 @@ describe("Worker Resource", () => {
 
       if (worker.url) {
         // Test that the worker was updated correctly
-        const response = await fetchAndExpectOK(worker.url);
-        const text = await response.text();
-        expect(text).toEqual("Hello from updated entrypoint file!");
+        await waitFor(
+          async () => {
+            return (await fetchAndExpectOK(worker.url!)).text();
+          },
+          (text) => text === "Hello from updated entrypoint file!",
+        );
 
         // Test the updated JSON endpoint
         const data = await waitFor(
@@ -2252,6 +2255,17 @@ describe("Worker Resource", () => {
       expect(metadata.default_environment.script.observability).toEqual({
         enabled: true,
         head_sampling_rate: 0.5,
+        logs: {
+          enabled: true,
+          head_sampling_rate: 0.5,
+          invocation_logs: true,
+          persist: true,
+        },
+        traces: {
+          enabled: true,
+          head_sampling_rate: 0.5,
+          persist: true,
+        },
       });
 
       expect(worker.observability).toEqual(baseObservability);
@@ -2266,13 +2280,12 @@ describe("Worker Resource", () => {
           persist: true,
           destinations: [],
         },
-        // TODO(sam): i don't have permission to set this in my account
-        // traces: {
-        //   enabled: true,
-        //   headSamplingRate: 0.1,
-        //   persist: true,
-        //   destinations: [],
-        // },
+        traces: {
+          enabled: true,
+          headSamplingRate: 0.1,
+          persist: true,
+          destinations: [],
+        },
       } satisfies WorkerObservability;
 
       worker = await Worker(workerName, {
@@ -2294,9 +2307,15 @@ describe("Worker Resource", () => {
         enabled: true,
         head_sampling_rate: 0.5,
         logs: {
-          head_sampling_rate: null,
+          head_sampling_rate: 0.5,
           enabled: true,
           invocation_logs: false,
+          persist: true,
+          destinations: [],
+        },
+        traces: {
+          enabled: true,
+          head_sampling_rate: 0.1,
           persist: true,
           destinations: [],
         },
