@@ -806,11 +806,11 @@ In your `alchemy.run.ts` script, import the `type MyRPC` and set it as the `rpc`
 ```diff lang='ts'
 // alchemy.run.ts
 import { Worker, type } from "alchemy/cloudflare";
-import type MyRPC from "./src/rpc.ts";
+import MyRPC from "./src/rpc.ts";
 
 export const rpcWorker = await Worker("rpc", {
   entrypoint: "./src/rpc.ts",
-+  rpc: type<MyRPC>,
++  rpc: MyRPC,
 });
 ```
 
