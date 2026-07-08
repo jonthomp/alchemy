@@ -15,12 +15,28 @@ export const getRegion: Provider<string> = loadConfig({
 });
 
 /**
+ * Resolve the endpoint URL for an aws4fetch service request, honouring the
+ * same `AWS_ENDPOINT_URL_<SERVICE>` / `AWS_ENDPOINT_URL` env vars as the AWS
+ * SDK / CLI so aws4fetch-based resources can be pointed at LocalStack, moto,
+ * or any other emulator.
+ */
+export function awsEndpoint(service: string, region: string): string {
+  return (
+    process.env[
+      `AWS_ENDPOINT_URL_${service.toUpperCase().replace(/-/g, "_")}`
+    ] ??
+    process.env.AWS_ENDPOINT_URL ??
+    `https://${service}.${region}.amazonaws.com`
+  ).replace(/\/+$/, "");
+}
+
+/**
  * AWS Service Configuration
  */
 export interface AwsServiceConfig {
   service: string;
   version: string;
-  endpoint: (region: string) => string;
+  endpoint?: (region: string) => string;
 }
 
 /**
@@ -63,7 +79,9 @@ export function getAwsApiCaller<T = any>(
       for (let attempt = 1; attempt <= 2; attempt++) {
         try {
           const region = await getRegion();
-          const url = config.endpoint(region);
+          const url = config.endpoint
+            ? config.endpoint(region)
+            : `${awsEndpoint(config.service, region)}/`;
 
           const body = new URLSearchParams({
             Action: action,
