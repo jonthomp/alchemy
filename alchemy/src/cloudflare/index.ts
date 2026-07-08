@@ -20,6 +20,7 @@ export * from "./api-gateway-operation.ts";
 export * from "./api-schema.ts";
 export * from "./api-shield.ts";
 export * from "./api.ts";
+export * from "./artifacts.ts";
 export * from "./assets.ts";
 export * from "./astro/astro.ts";
 export * from "./bindings.ts";

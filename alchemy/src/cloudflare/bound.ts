@@ -5,6 +5,7 @@ import type { Ai as _Ai } from "./ai.ts";
 import type { AiSearchNamespace as _AiSearchNamespace } from "./ai-search-namespace.ts";
 import type { AiSearch as _AiSearch } from "./ai-search.ts";
 import type { AnalyticsEngineDataset as _AnalyticsEngineDataset } from "./analytics-engine.ts";
+import type { Artifacts as _Artifacts } from "./artifacts.ts";
 import type { Assets } from "./assets.ts";
 import type { Binding, Json, Self } from "./bindings.ts";
 import type { BrowserRendering } from "./browser-rendering.ts";
@@ -61,6 +62,8 @@ export type Bound<T extends Binding> = T extends _AiSearch
           ? BoundWorker<RPC>
           : T extends _Worker<any, infer RPC> | WorkerRef<infer RPC>
             ? BoundWorker<RPC>
+            : T extends _Artifacts
+              ? Artifacts
             : T extends { type: "service" }
               ? Service
               : T extends _R2Bucket

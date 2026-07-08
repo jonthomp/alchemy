@@ -167,6 +167,11 @@ export const buildWorkerOptions = async (
         };
         break;
       }
+      case "artifacts": {
+        throw new Error(
+          "Artifacts bindings are not supported in Alchemy local dev yet. Deploy the Worker or use generated Wrangler config with remote Artifacts bindings.",
+        );
+      }
       case "assets": {
         options.assets = {
           binding: key,

@@ -516,6 +516,12 @@ export async function prepareWorkerMetadata(
         jurisdiction:
           binding.jurisdiction === "default" ? undefined : binding.jurisdiction,
       });
+    } else if (binding.type === "artifacts") {
+      meta.bindings.push({
+        type: "artifacts",
+        name: bindingName,
+        namespace: binding.namespace,
+      });
     } else if (binding.type === "send_email") {
       meta.bindings.push({
         type: "send_email",

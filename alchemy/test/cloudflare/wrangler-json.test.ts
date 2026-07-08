@@ -3,6 +3,7 @@ import path from "pathe";
 import { describe, expect } from "vitest";
 import { alchemy } from "../../src/alchemy.ts";
 import { Ai } from "../../src/cloudflare/ai.ts";
+import { Artifacts } from "../../src/cloudflare/artifacts.ts";
 import { R2Bucket } from "../../src/cloudflare/bucket.ts";
 import { D1Database } from "../../src/cloudflare/d1-database.ts";
 import { DurableObjectNamespace } from "../../src/cloudflare/durable-object-namespace.ts";
@@ -744,6 +745,49 @@ describe("WranglerJson Resource", () => {
       } finally {
         await fs.rm(tempDir, { recursive: true, force: true });
         await destroy(scope);
+      }
+    });
+
+    test("with Artifacts binding", async () => {
+      const name = `${BRANCH_PREFIX}-test-worker-artifacts`;
+      const tempDir = path.join(".out", "alchemy-artifacts-test");
+      const entrypoint = path.join(tempDir, "worker.ts");
+
+      try {
+        await fs.rm(tempDir, { recursive: true, force: true });
+        await fs.mkdir(tempDir, { recursive: true });
+        await fs.writeFile(entrypoint, esmWorkerScript);
+
+        const worker = {
+          name,
+          format: "esm" as const,
+          entrypoint,
+          compatibilityDate: "2025-06-16",
+          compatibilityFlags: [] as string[],
+          bindings: {
+            ARTIFACTS: Artifacts({ namespace: "test-artifacts" }),
+          },
+        };
+
+        const { spec } = await WranglerJson({ worker });
+        const artifacts = (
+          spec as typeof spec & {
+            artifacts?: Array<{
+              binding: string;
+              namespace: string;
+              remote?: boolean;
+            }>;
+          }
+        ).artifacts;
+
+        expect(artifacts).toHaveLength(1);
+        expect(artifacts?.[0]).toMatchObject({
+          binding: "ARTIFACTS",
+          namespace: "test-artifacts",
+          remote: true,
+        });
+      } finally {
+        await fs.rm(tempDir, { recursive: true, force: true });
       }
     });
 

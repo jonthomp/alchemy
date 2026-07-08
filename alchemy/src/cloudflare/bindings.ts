@@ -8,6 +8,7 @@ import type { Ai } from "./ai.ts";
 import type { AiSearchNamespace } from "./ai-search-namespace.ts";
 import type { AiSearch } from "./ai-search.ts";
 import type { AnalyticsEngineDataset } from "./analytics-engine.ts";
+import type { Artifacts } from "./artifacts.ts";
 import type { Assets } from "./assets.ts";
 import type { Bound } from "./bound.ts";
 import type { BrowserRendering } from "./browser-rendering.ts";
@@ -54,6 +55,7 @@ export type Binding =
   | AiSearch
   | AiSearchNamespace
   | Assets
+  | Artifacts
   | Container
   | CloudflareSecret
   | CloudflareSecretRef
@@ -127,6 +129,7 @@ export type WorkerBindingSpec =
   | WorkerBindingAiSearch
   | WorkerBindingAiSearchNamespace
   | WorkerBindingAnalyticsEngine
+  | WorkerBindingArtifacts
   | WorkerBindingAssets
   | WorkerBindingBrowserRendering
   | WorkerBindingD1
@@ -204,6 +207,18 @@ export interface WorkerBindingAnalyticsEngine {
   type: "analytics_engine";
   /** Dataset name */
   dataset: string;
+}
+
+/**
+ * Artifacts binding type
+ */
+export interface WorkerBindingArtifacts {
+  /** The name of the binding */
+  name: string;
+  /** Type identifier for Artifacts binding */
+  type: "artifacts";
+  /** Artifacts namespace name */
+  namespace: string;
 }
 
 /**

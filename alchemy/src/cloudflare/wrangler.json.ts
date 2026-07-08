@@ -264,6 +264,11 @@ async function processBindings(
   const kvNamespaces: WranglerJsonConfig["kv_namespaces"] = [];
   const durableObjects: WranglerJsonConfig["durable_objects"]["bindings"] = [];
   const r2Buckets: WranglerJsonConfig["r2_buckets"] = [];
+  const artifacts: {
+    binding: string;
+    namespace: string;
+    remote?: boolean;
+  }[] = [];
   const services: WranglerJsonConfig["services"] = [];
   const sendEmailBindings: WranglerJsonConfig["send_email"] = [];
   const secrets: string[] = [];
@@ -421,6 +426,12 @@ async function processBindings(
         allowed_destination_addresses: binding.allowedDestinationAddresses,
         allowed_sender_addresses: binding.allowedSenderAddresses,
         ...(binding.dev?.remote ? { remote: true } : {}),
+      });
+    } else if (binding.type === "artifacts") {
+      artifacts.push({
+        binding: bindingName,
+        namespace: binding.namespace,
+        remote: binding.dev?.remote ?? true,
       });
     } else if (binding.type === "secret") {
       // Secret binding
@@ -596,6 +607,14 @@ async function processBindings(
 
   if (r2Buckets.length > 0) {
     spec.r2_buckets = r2Buckets;
+  }
+
+  if (artifacts.length > 0) {
+    (
+      spec as WranglerJsonSpec & {
+        artifacts?: typeof artifacts;
+      }
+    ).artifacts = artifacts;
   }
 
   if (services.length > 0) {

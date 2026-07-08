@@ -4,6 +4,7 @@ import { describe, expect } from "vitest";
 import { alchemy } from "../../src/alchemy.ts";
 import { AnalyticsEngineDataset } from "../../src/cloudflare/analytics-engine.ts";
 import { createCloudflareApi } from "../../src/cloudflare/api.ts";
+import { Artifacts } from "../../src/cloudflare/artifacts.ts";
 import { Assets } from "../../src/cloudflare/assets.ts";
 import { Self } from "../../src/cloudflare/bindings.ts";
 import { DurableObjectNamespace } from "../../src/cloudflare/durable-object-namespace.ts";
@@ -37,6 +38,8 @@ import "../../src/test/vitest.ts";
 const ENABLE_WFP_TESTS = process.env.CLOUDFLARE_ACCOUNT_ENABLE_WFP !== "false";
 const ENABLE_PAID_TESTS =
   process.env.CLOUDFLARE_ACCOUNT_ENABLE_PAID !== "false";
+const ENABLE_ARTIFACTS_TESTS =
+  process.env.CLOUDFLARE_ACCOUNT_ENABLE_ARTIFACTS !== "false";
 
 const test = alchemy.test(import.meta, {
   prefix: BRANCH_PREFIX,
@@ -1402,6 +1405,159 @@ describe("Worker Resource", () => {
       await assertWorkerDoesNotExist(api, workerName);
     }
   }, 60000); // Increase timeout for Worker operations
+
+  test.skipIf(!ENABLE_ARTIFACTS_TESTS)(
+    "create and test worker with Artifacts binding",
+    async (scope) => {
+      const workerName = `${BRANCH_PREFIX}-test-worker-artifacts-binding`;
+      const namespace = `${BRANCH_PREFIX}-test-artifacts`;
+      const repoName = `${BRANCH_PREFIX}-test-worker-artifacts-repo`;
+
+      let worker: Worker | undefined;
+
+      try {
+        worker = await Worker(workerName, {
+          name: workerName,
+          script: `
+            export default {
+              async fetch(request, env, ctx) {
+                const url = new URL(request.url);
+
+                if (url.pathname !== "/check-binding") {
+                  return new Response("Artifacts Worker is running!", {
+                    status: 200,
+                    headers: { "Content-Type": "text/plain" }
+                  });
+                }
+
+                if (!env.ARTIFACTS) {
+                  return Response.json({
+                    success: false,
+                    hasBinding: false
+                  }, { status: 500 });
+                }
+
+                const repoName = ${JSON.stringify(repoName)};
+
+                try {
+                  await env.ARTIFACTS.delete(repoName);
+
+                  const created = await env.ARTIFACTS.create(repoName, {
+                    description: "Alchemy Artifacts binding test"
+                  });
+                  const repo = await env.ARTIFACTS.get(repoName);
+                  const deleted = await env.ARTIFACTS.delete(repoName);
+
+                  return Response.json({
+                    success: true,
+                    hasBinding: true,
+                    bindingType: typeof env.ARTIFACTS,
+                    created: {
+                      name: created.name,
+                      remote: created.remote,
+                      hasToken: typeof created.token === "string" && created.token.length > 0
+                    },
+                    info: {
+                      name: repo.name,
+                      remote: repo.remote,
+                      defaultBranch: repo.defaultBranch,
+                      readOnly: repo.readOnly
+                    },
+                    deleted
+                  });
+                } catch (error) {
+                  try {
+                    await env.ARTIFACTS.delete(repoName);
+                  } catch {}
+
+                  return Response.json({
+                    success: false,
+                    hasBinding: true,
+                    error: error?.message ?? String(error),
+                    code: error?.code,
+                    name: error?.name
+                  }, { status: 500 });
+                }
+              }
+            };
+          `,
+          format: "esm",
+          url: true,
+          bindings: {
+            ARTIFACTS: Artifacts({ namespace }),
+          },
+          adopt: true,
+        });
+
+        expect(worker.id).toBeTruthy();
+        expect(worker.name).toEqual(workerName);
+        expect(worker.bindings?.ARTIFACTS).toBeDefined();
+        expect(worker.url).toBeTruthy();
+
+        const data = await waitFor(
+          async () => {
+            const response = await fetch(`${worker!.url}/check-binding`);
+            if (!response.ok) {
+              return {
+                success: false,
+                status: response.status,
+                body: await response.text(),
+              };
+            }
+            return (await response.json()) as {
+              success: boolean;
+              hasBinding: boolean;
+              bindingType: string;
+              created: {
+                name: string;
+                remote: string;
+                hasToken: boolean;
+              };
+              info: {
+                name: string;
+                remote: string;
+                defaultBranch: string;
+                readOnly: boolean;
+              };
+              deleted: boolean;
+            };
+          },
+          (data) =>
+            data.success === true &&
+            "created" in data &&
+            data.created.name === repoName,
+          { timeoutMs: 30_000, intervalMs: 1_000 },
+        );
+
+        if (!data.success || !("created" in data)) {
+          throw new Error(
+            `Artifacts binding check failed: ${JSON.stringify(data)}`,
+          );
+        }
+
+        expect(data.success).toEqual(true);
+        expect(data.hasBinding).toEqual(true);
+        expect(data.bindingType).toEqual("object");
+        expect(data.created.name).toEqual(repoName);
+        expect(data.created.remote).toContain(
+          `artifacts.cloudflare.net/${namespace}/${repoName}.git`,
+        );
+        expect(data.created.hasToken).toEqual(true);
+        expect(data.info).toMatchObject({
+          name: repoName,
+          readOnly: false,
+        });
+        expect(data.info.remote).toContain(
+          `artifacts.cloudflare.net/${namespace}/${repoName}.git`,
+        );
+        expect(data.deleted).toEqual(true);
+      } finally {
+        await destroy(scope);
+        await assertWorkerDoesNotExist(api, workerName);
+      }
+    },
+    60000,
+  );
 
   test("can bind to a worker referenced by name", async (scope) => {
     const workerName = `${BRANCH_PREFIX}-test-worker-bind-by-name`;
