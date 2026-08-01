@@ -1,3 +1,26 @@
+## v0.94.0
+
+### &nbsp;&nbsp;&nbsp;🚀 Features
+
+- **cloudflare**: Workers Cache support via `cache` prop on Worker &nbsp;-&nbsp; by **sam** in https://github.com/alchemy-run/alchemy-async/issues/1458 [<samp>(8cabe)</samp>](https://github.com/alchemy-run/alchemy-async/commit/8cabe90a)
+- **website**: Move v1 docs to v1.alchemy.run &nbsp;-&nbsp; by **sam** in https://github.com/alchemy-run/alchemy-async/issues/1448 [<samp>(81f38)</samp>](https://github.com/alchemy-run/alchemy-async/commit/81f388b8)
+
+### &nbsp;&nbsp;&nbsp;🐞 Bug Fixes
+
+- **aws**:
+  - Honour AWS_ENDPOINT_URL for aws4fetch-based resources &nbsp;-&nbsp; by **sam** in https://github.com/alchemy-run/alchemy-async/issues/1405 [<samp>(fb411)</samp>](https://github.com/alchemy-run/alchemy-async/commit/fb411f08)
+  - Replace Cloud Control resource on empty read-back during update &nbsp;-&nbsp; by **sam** in https://github.com/alchemy-run/alchemy-async/issues/1446 [<samp>(db9a7)</samp>](https://github.com/alchemy-run/alchemy-async/commit/db9a789c)
+  - Fail adoption gracefully when Cloud Control resource cannot be read back &nbsp;-&nbsp; by **sam** in https://github.com/alchemy-run/alchemy-async/issues/1447 [<samp>(b2505)</samp>](https://github.com/alchemy-run/alchemy-async/commit/b2505e9e)
+- **cloudflare**:
+  - Preserve query string for Hyperdrive origin &nbsp;-&nbsp; by **false** in https://github.com/alchemy-run/alchemy-async/issues/1444 [<samp>(65990)</samp>](https://github.com/alchemy-run/alchemy-async/commit/65990cc9)
+  - Read fresh sql files for local D1 migrations &nbsp;-&nbsp; by **Bijoy Haldar** in https://github.com/alchemy-run/alchemy-async/issues/1443 [<samp>(792de)</samp>](https://github.com/alchemy-run/alchemy-async/commit/792de03a)
+  - Json() bindings deploy as native types instead of strings &nbsp;-&nbsp; by **sam** in https://github.com/alchemy-run/alchemy-async/issues/1451 [<samp>(c27b3)</samp>](https://github.com/alchemy-run/alchemy-async/commit/c27b340c)
+  - Handle aborted response body in miniflare worker proxy &nbsp;-&nbsp; by **John Royal** in https://github.com/alchemy-run/alchemy-async/issues/1457 [<samp>(aeabf)</samp>](https://github.com/alchemy-run/alchemy-async/commit/aeabfdf6)
+
+##### &nbsp;&nbsp;&nbsp;&nbsp;[View changes on GitHub](https://github.com/alchemy-run/alchemy-async/compare/v0.93.12...v0.94.0)
+
+---
+
 ## v0.93.12
 
 ### &nbsp;&nbsp;&nbsp;🐞 Bug Fixes
